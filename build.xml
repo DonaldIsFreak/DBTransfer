@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DBTransfer" default="build">
+	<property name="target.dist" value="classes" />
+	<property name="test.dist" value="test" />
+
+	<path id="MySQLConnector.libpath">
+		<pathelement location="lib/mysql-connector-java.jar"/>
+	</path>
+
+	<path id="MyBatis.libpath">
+		<pathelement location="lib/mybatis-3.2.2.jar"/>
+	</path>
+
+	<path id="default.classpath">
+		<pathelement location="${target.dist}" />
+		<path refid="MySQLConnector.libpath" />
+		<path refid="MyBatis.libpath" />
+	</path>
+
+	<target name="init">
+		<mkdir dir="${target.dist}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="classes" />
+	</target>
+
+	<target name="cleanall" depends="clean" />
+	
+	<target name="build" depends="build-subproject,build-project,build-test" />
+	<target name="build-subproject" />
+
+	<target name="build-project" depends="init">
+		<echo>starting prepare ${ant.project.name} folder.</echo>
+		<javac destdir="${target.dist}" includeantruntime="true">
+			<src path="src"/>
+			<classpath refid="default.classpath"/>
+		</javac>
+	</target>
+
+	<target name="build-test" depends="init,build-project">
+		<copy todir="${test.dist}">
+			<fileset dir="lib" />
+			<fileset dir="data" />
+			<fileset dir="classes" />
+		</copy>
+	</target>
+</project>
