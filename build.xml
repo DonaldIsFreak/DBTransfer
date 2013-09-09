@@ -11,6 +11,10 @@
 		<pathelement location="lib/mybatis-3.2.2.jar"/>
 	</path>
 
+	<path id="Log4J.libpath">
+		<pathelement location="lib/log4j-1.2.17.jar" />
+	</path>
+
 	<path id="default.classpath">
 		<pathelement location="${target.dist}" />
 		<path refid="MySQLConnector.libpath" />
@@ -19,10 +23,12 @@
 
 	<target name="init">
 		<mkdir dir="${target.dist}" />
+		<delete dir="${test.dist}" />
 	</target>
 
 	<target name="clean">
-		<delete dir="classes" />
+		<delete dir="${target.dist}" />
+		<delete dir="${test.dist}" />
 	</target>
 
 	<target name="cleanall" depends="clean" />
