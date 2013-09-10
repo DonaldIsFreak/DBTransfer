@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogMapper">
+  <select id="getLogByID" parameterType="int" resultType="Log">
+    SELECT * FROM WHERE id = #{id}
+  </select>
+
+  <select id="getLog" resultType="int">
+    SELECT a.endNo FROM log a,(SELECT max(ctime) ctime FROM log) b where a.ctime = b.ctime
+  </select>
+
+  <insert id="setLog" parameterType="Log">
+    INSERT INTO log (startNo,endNo,ctime) VALUES(#{startNo},#{endNo},NOW())
+  </insert>
+</mapper>

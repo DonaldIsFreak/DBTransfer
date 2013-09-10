@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.apache.ibatis.io.Resources; 
 import org.apache.ibatis.session.SqlSession; 
@@ -29,8 +28,7 @@ public class DBTransfer{
 	public SqlSession getSession(){
 		return getSession(this.db_type);
 	}	
-
-	public SqlSession getSession(String name){
+public SqlSession getSession(String name){
 		Properties props = new Properties();
 		try{
 			props.load(new FileInputStream(configs.get(name)));
@@ -41,6 +39,7 @@ public class DBTransfer{
 		}
 		return null;
 	} 
+
 	public User getUserByID(int id){
 		SqlSession session= getSession();
 		User user=null;
@@ -51,10 +50,72 @@ public class DBTransfer{
 		}
 		return user;
 	}	
+	
+	public List<User> getAllUsers(){
+		SqlSession session = getSession();
+		List<User> users = null;
+		try {
+			users = session.selectList("UserMapper.getAllUsers");
+		}finally {
+			session.close();
+		}
+
+		return users;
+	}
+
+	public void setUsers(List<User> users){
+		SqlSession session = getSession();
+		try {
+			for(User user:users){
+				session.insert("UserMapper.setUser",user);
+			}			
+			session.commit();
+		} finally {
+			session.close();
+		}
+	}
+	public void setUser(User user){
+		SqlSession session = getSession();
+		try{
+			session.insert("UserMapper.setUser",user);
+			session.commit();
+		}finally {
+			session.close();
+		}
+	}
+	public void setLog(Log log){
+		SqlSession session = getSession();
+		try {
+			session.insert("LogMapper.setLog",log);
+			session.commit();
+		}finally {
+			session.close();
+		}
+	}
+	public int getLastNo(){
+		SqlSession session = getSession();
+		int result = 0;
+		try {
+			result = session.selectOne("LogMapper.getLog");
+		} finally {
+			session.close();
+		}
+
+		return result;	
+	}
 
 	public static void main(String[] argv) throws Exception{
-		DBTransfer transfer = new DBTransfer("source");
-		User user = transfer.getUserByID(1);	
+		DBTransfer source = new DBTransfer("source");
+		DBTransfer target = new DBTransfer("target");
+		User user = source.getUserByID(1);	
 		System.out.println(user);
+		List<User> users = source.getAllUsers();
+		target.setUsers(users);
+		Log log = new Log();
+		log.setStartNo(1);
+		log.setEndNo(5);
+		System.out.println(log);
+		target.setLog(log);
+		System.out.println(target.getLastNo());
 	}
 }

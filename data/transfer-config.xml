@@ -16,5 +16,7 @@
   </environments>
   <mappers>
   	<mapper resource="UserMapper.xml" />
+	<mapper resource="HourlyMapper.xml" />
+	<mapper resource="LogMapper.xml" />
   </mappers>
 </configuration>

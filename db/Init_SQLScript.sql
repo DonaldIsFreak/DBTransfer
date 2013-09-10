@@ -5,3 +5,9 @@ CREATE TABLE user (
 
 INSERT INTO user (name) VALUES ('Donald');
 
+CREATE TABLE log (
+	startNo INT NOT NULL,
+	endNo INT NOT NULL,
+	ctime DATETIME
+);
+

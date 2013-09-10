@@ -19,6 +19,7 @@
 		<pathelement location="${target.dist}" />
 		<path refid="MySQLConnector.libpath" />
 		<path refid="MyBatis.libpath" />
+		<path refid="Log4J.libpath" />
 	</path>
 
 	<target name="init">
