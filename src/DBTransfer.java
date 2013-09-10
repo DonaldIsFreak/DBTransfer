@@ -63,17 +63,41 @@ public SqlSession getSession(String name){
 		return users;
 	}
 
+	public List<User> getUserRange(int start,int end){
+		SqlSession session = getSession();
+		List<User> users = null;
+		try {
+			HashMap<String,Integer> range = new HashMap<String,Integer>();
+			range.put("start",start);
+			range.put("end",end);
+			users = session.selectList("UserMapper.getUserRange",range);
+		}finally {
+			session.close();
+		}
+		return users;
+	}
+
 	public void setUsers(List<User> users){
 		SqlSession session = getSession();
 		try {
 			for(User user:users){
 				session.insert("UserMapper.setUser",user);
+				System.out.println(user.getId());
 			}			
+			User startUser = users.get(0);
+			User endUser = users.get(users.size()-1);
+			int startNo = startUser.getId();
+			int endNo = endUser.getId();
+			Log log = new Log();
+			log.setStartNo(startNo);
+			log.setEndNo(endNo);
+			session.insert("LogMapper.setLog",log);
 			session.commit();
 		} finally {
 			session.close();
 		}
 	}
+
 	public void setUser(User user){
 		SqlSession session = getSession();
 		try{
@@ -83,6 +107,7 @@ public SqlSession getSession(String name){
 			session.close();
 		}
 	}
+
 	public void setLog(Log log){
 		SqlSession session = getSession();
 		try {
@@ -92,11 +117,14 @@ public SqlSession getSession(String name){
 			session.close();
 		}
 	}
+
 	public int getLastNo(){
 		SqlSession session = getSession();
 		int result = 0;
 		try {
 			result = session.selectOne("LogMapper.getLog");
+		}catch(Exception e){
+			result =0;
 		} finally {
 			session.close();
 		}
@@ -105,8 +133,10 @@ public SqlSession getSession(String name){
 	}
 
 	public static void main(String[] argv) throws Exception{
+		int COUNT = 10;
 		DBTransfer source = new DBTransfer("source");
 		DBTransfer target = new DBTransfer("target");
+		/* Test Code
 		User user = source.getUserByID(1);	
 		System.out.println(user);
 		List<User> users = source.getAllUsers();
@@ -117,5 +147,16 @@ public SqlSession getSession(String name){
 		System.out.println(log);
 		target.setLog(log);
 		System.out.println(target.getLastNo());
+		*/
+		int lastNo = target.getLastNo();	
+		int startNo = lastNo+1;
+		int endNo = startNo+COUNT;	
+		List<User> users = source.getUserRange(startNo,endNo);
+
+		for (User user: users){
+			System.out.println(user.getId());	
+		}	
+
+		target.setUsers(users);
 	}
 }

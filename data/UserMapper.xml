@@ -11,6 +11,10 @@
     SELECT * FROM user
   </select>
 
+  <select id="getUserRange" parameterType="java.util.HashMap" resultType="User">
+    SELECT * FROM user WHERE id BETWEEN #{start} AND #{end}
+  </select>
+
   <insert id="setUser" parameterType="User">
     INSERT INTO user (id,name) VALUES(#{id},#{name})
   </insert>
