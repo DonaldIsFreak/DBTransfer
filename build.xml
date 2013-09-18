@@ -15,11 +15,16 @@
 		<pathelement location="lib/log4j-1.2.17.jar" />
 	</path>
 
+	<path id="SQLJDBC.libpath">
+		<pathelement location="lib/sqljdbc4.jar" />
+	</path>
+
 	<path id="default.classpath">
 		<pathelement location="${target.dist}" />
 		<path refid="MySQLConnector.libpath" />
 		<path refid="MyBatis.libpath" />
 		<path refid="Log4J.libpath" />
+		<path refid="SQLJDBC.libpath" />
 	</path>
 
 	<target name="init">

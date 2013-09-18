@@ -12,6 +12,6 @@
   </select>
 
   <insert id="setLog" parameterType="Log">
-    INSERT INTO log (startNo,endNo,ctime) VALUES(#{startNo},#{endNo},NOW())
+    INSERT INTO log (startNo,endNo,ctime) VALUES(#{startNo},#{endNo},GETDATE())
   </insert>
 </mapper>
